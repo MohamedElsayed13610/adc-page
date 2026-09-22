@@ -97,6 +97,23 @@ export default function App() {
       gsap.from('.hero-meta', { y: 24, opacity: 0, duration: .8, stagger: .08, delay: .5 })
       gsap.to('.hero-bg', { yPercent: 10, scale: 1.08, ease: 'none', scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom top', scrub: true } })
       gsap.to('.orbit', { rotate: 35, yPercent: 45, ease: 'none', scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom top', scrub: true } })
+
+      // Continuous hero logistics choreography — separate moving aircraft, ship and truck.
+      gsap.set('.plane-fleet', { x: -320, y: 90, rotate: -8, scale: .82 })
+      gsap.to('.plane-fleet', { x: () => window.innerWidth + 360, y: -220, rotate: 4, scale: 1.1, duration: 10, repeat: -1, ease: 'none' })
+      gsap.set('.ship-fleet', { x: -420 })
+      gsap.to('.ship-fleet', { x: () => window.innerWidth + 460, duration: 15, repeat: -1, ease: 'none' })
+      gsap.set('.truck-fleet', { x: -300 })
+      gsap.to('.truck-fleet', { x: () => window.innerWidth + 340, duration: 7.5, repeat: -1, ease: 'none' })
+      gsap.to('.hero-fleet', { yPercent: 18, ease: 'none', scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom top', scrub: true } })
+
+      gsap.utils.toArray<HTMLElement>('.service-card').forEach((card) => {
+        const image = card.querySelector('img')
+        const copy = card.querySelector('.service-copy')
+        if (image) gsap.fromTo(image, { scale: 1.12 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } })
+        if (copy) gsap.from(copy, { x: 45, opacity: 0, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 78%' } })
+      })
+
       gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
         gsap.from(el, { y: 48, opacity: 0, duration: .85, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%' } })
       })
@@ -144,6 +161,41 @@ export default function App() {
         <div className="grid-overlay" />
         <div className="orbit orbit-a" />
         <div className="orbit orbit-b" />
+
+        <div className="hero-fleet" aria-hidden="true">
+          <div className="contrail contrail-a" />
+          <div className="fleet plane-fleet">
+            <span className="fleet-label">AIR / ADC-01</span>
+            <svg viewBox="0 0 260 86" role="presentation">
+              <path d="M5 45 92 36 132 4h18l-17 31 89-9c10-1 27 6 32 12-7 7-23 12-33 12l-88-4 17 30h-18L93 48 5 50z" />
+              <path className="accent" d="m82 38 18-2-11 12-18 1z" />
+            </svg>
+          </div>
+
+          <div className="fleet ship-fleet">
+            <span className="fleet-label">SEA / ADC-02</span>
+            <svg viewBox="0 0 290 110" role="presentation">
+              <path d="M28 65h227l-23 28H58L28 65Z" />
+              <path d="M70 37h146v26H70z" />
+              <path className="accent" d="M77 43h32v15H77zm37 0h32v15h-32zm37 0h32v15h-32zm37 0h22v15h-22z" />
+              <path d="M48 92c18 8 36 8 54 0 18 8 36 8 54 0 18 8 36 8 54 0 18 8 36 8 54 0v8H48z" opacity=".4" />
+            </svg>
+          </div>
+
+          <div className="fleet truck-fleet">
+            <span className="fleet-label">LAND / ADC-03</span>
+            <svg viewBox="0 0 280 96" role="presentation">
+              <path d="M14 24h164v49H14zM178 41h48l30 20v12h-78z" />
+              <path className="accent" d="M187 47h33l18 13h-51z" />
+              <circle cx="62" cy="77" r="13" /><circle cx="211" cy="77" r="13" />
+              <circle className="wheel" cx="62" cy="77" r="6" /><circle className="wheel" cx="211" cy="77" r="6" />
+            </svg>
+          </div>
+
+          <div className="sea-lane" />
+          <div className="road-lane" />
+        </div>
+
         <div className="hero-content">
           <div className="hero-meta kicker"><span className="pulse" />{t.kicker}</div>
           <h1>{t.title.map((line, i) => <span key={line} className={'hero-line ' + (i === 1 ? 'outline' : '')}>{line}</span>)}</h1>
